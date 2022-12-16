@@ -6,6 +6,7 @@ const app = express();
 
 const connectDB = require("./db/connect");
 const authenticateUser = require("./middleware/authentication");
+const cors = require("cors");
 
 // routers
 const authRouter = require("./routes/auth");
@@ -16,6 +17,7 @@ const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send('<h1>PS_Sport API</h1><a href="/api-docs">Documentation</a>');
