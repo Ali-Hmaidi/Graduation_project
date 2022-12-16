@@ -9,6 +9,8 @@ const authenticateUser = require("./middleware/authentication");
 
 // routers
 const authRouter = require("./routes/auth");
+const teamRouter = require("./routes/team");
+const playerRouter = require("./routes/player");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -21,6 +23,8 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/teams", teamRouter);
+app.use("/api/v1/players", playerRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

@@ -30,6 +30,12 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
   },
   address: String,
+
+  admin: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 UserSchema.pre("save", async function () {
