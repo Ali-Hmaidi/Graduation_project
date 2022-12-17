@@ -9,8 +9,13 @@ const getPlayers = async (req, res) => {
 };
 
 const CreatePlayer = async (req, res) => {
-  const player = await Player.create(req.body);
-  res.status(StatusCodes.CREATED).json({ player });
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const player = await Player.create(req.body);
+    res.status(StatusCodes.CREATED).json({ success: true, player });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
 };
 
 const getPlayer = async (req, res) => {
@@ -30,25 +35,19 @@ const getPlayer = async (req, res) => {
 };
 
 const deletePlayer = async (req, res) => {
-  const {
-    //user: { userId },
-    params: { id: PlayerId },
-  } = req;
-
-  // const id = await Team.findOne({ _id: teamtId });
-  // if (id.createdBy != userId) {
-  //   throw new BadRequestError("a user can only delete tweets that he created");
-  // }
-
-  const player = await Player.findByIdAndRemove({
-    _id: PlayerId,
-  });
-
-  if (!player) {
-    throw new NotFoundError(`no player with id ${PlayerId}`);
+  const PlayerId = req.params.id;
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const player = await Player.findByIdAndRemove({
+      _id: PlayerId,
+    });
+    if (!player) {
+      throw new NotFoundError(`no player with id ${PlayerId}`);
+    }
+    res.status(StatusCodes.OK).json({ success: true });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
   }
-
-  res.status(StatusCodes.OK).json({ success: true });
 };
 
 const RetrieveTeamPlayers = async (req, res) => {

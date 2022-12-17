@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authenticateUser = require("../middleware/authentication");
 
 const {
   getTeams,
@@ -8,7 +9,7 @@ const {
   deleteTeam,
 } = require("../controllers/team");
 
-router.get("/", getTeams).post("/", CreateTeam);
-router.get("/:id", getTeam).delete("/:id", deleteTeam);
+router.get("/", getTeams).post("/", authenticateUser, CreateTeam);
+router.get("/:id", getTeam).delete("/:id", authenticateUser, deleteTeam);
 
 module.exports = router;

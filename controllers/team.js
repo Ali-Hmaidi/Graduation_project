@@ -9,14 +9,17 @@ const getTeams = async (req, res) => {
 };
 
 const CreateTeam = async (req, res) => {
-  const team = await Team.create(req.body);
-  res.status(StatusCodes.CREATED).json({ team });
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const team = await Team.create(req.body);
+    res.status(StatusCodes.CREATED).json({ team });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
 };
 
 const getTeam = async (req, res) => {
-  const {
-    params: { id: teamId },
-  } = req;
+  const teamId = req.params.id;
 
   const team = await Team.findOne({
     _id: teamId,
@@ -30,25 +33,22 @@ const getTeam = async (req, res) => {
 };
 
 const deleteTeam = async (req, res) => {
-  const {
-    //user: { userId },
-    params: { id: teamtId },
-  } = req;
+  const teamId = req.params.id;
 
-  // const id = await Team.findOne({ _id: teamtId });
-  // if (id.createdBy != userId) {
-  //   throw new BadRequestError("a user can only delete tweets that he created");
-  // }
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const team = await Team.findByIdAndRemove({
+      _id: teamId,
+    });
 
-  const team = await Team.findByIdAndRemove({
-    _id: teamtId,
-  });
+    if (!team) {
+      throw new NotFoundError(`no team with id ${teamtId}`);
+    }
 
-  if (!team) {
-    throw new NotFoundError(`no team with id ${teamtId}`);
+    res.status(StatusCodes.OK).json({ success: true });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
   }
-
-  res.status(StatusCodes.OK).json({ success: true });
 };
 
 module.exports = {
