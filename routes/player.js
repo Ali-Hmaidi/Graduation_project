@@ -8,10 +8,14 @@ const {
   CreatePlayer,
   deletePlayer,
   RetrieveTeamPlayers,
+  updatePlayer,
 } = require("../controllers/player");
 
 router.get("/", getPlayers).post("/", authenticateUser, CreatePlayer);
-router.get("/:id", getPlayer).delete("/:id", authenticateUser, deletePlayer);
+router
+  .get("/:id", getPlayer)
+  .delete("/:id", authenticateUser, deletePlayer)
+  .patch("/:id", authenticateUser, updatePlayer);
 router.get("/team/:teamId", RetrieveTeamPlayers);
 
 module.exports = router;

@@ -7,9 +7,13 @@ const {
   CreateMatch,
   getMatch,
   deleteMatch,
+  updateMatch,
 } = require("../controllers/match");
 
 router.get("/", getMatches).post("/", authenticateUser, CreateMatch);
-router.get("/:id", getMatch).delete("/:id", authenticateUser, deleteMatch);
+router
+  .get("/:id", getMatch)
+  .delete("/:id", authenticateUser, deleteMatch)
+  .patch("/:id", authenticateUser, updateMatch);
 
 module.exports = router;

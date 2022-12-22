@@ -18,6 +18,8 @@ const authRouter = require("./routes/auth");
 const teamRouter = require("./routes/team");
 const playerRouter = require("./routes/player");
 const matchesRouter = require("./routes/match");
+const playGroundsRouter = require("./routes/playGround");
+const usersRouter = require("./routes/user");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -43,7 +45,9 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/teams", teamRouter);
 app.use("/api/v1/players", playerRouter);
-app.use("/api/v1/Matches", matchesRouter);
+app.use("/api/v1/matches", matchesRouter);
+app.use("/api/v1/playGrounds", playGroundsRouter);
+app.use("/api/v1/users", authenticateUser, usersRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

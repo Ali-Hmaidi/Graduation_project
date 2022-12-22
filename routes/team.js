@@ -7,9 +7,13 @@ const {
   getTeam,
   CreateTeam,
   deleteTeam,
+  updateTeam,
 } = require("../controllers/team");
 
 router.get("/", getTeams).post("/", authenticateUser, CreateTeam);
-router.get("/:id", getTeam).delete("/:id", authenticateUser, deleteTeam);
+router
+  .get("/:id", getTeam)
+  .delete("/:id", authenticateUser, deleteTeam)
+  .patch("/:id", authenticateUser, updateTeam);
 
 module.exports = router;

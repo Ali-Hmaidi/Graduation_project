@@ -17,7 +17,17 @@ const MatchesSchema = new mongoose.Schema({
     ],
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["comingSoon", "onGoing", "endded"],
+    default: "comingSoon",
+  },
+  playGround: {
+    type: mongoose.Types.ObjectId,
+    ref: "PlayGround",
 
+    required: true,
+  },
   matchDate: {
     type: Date,
     required: true,

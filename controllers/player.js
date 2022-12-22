@@ -57,10 +57,43 @@ const RetrieveTeamPlayers = async (req, res) => {
   res.status(StatusCodes.OK).json({ players });
 };
 
+const updatePlayer = async (req, res) => {
+  const {
+    body: { name, teamId, thumbnail },
+    params: { id: playerId },
+  } = req;
+
+  const isAdmin = req.user.admin;
+
+  if (isAdmin) {
+    if (!name || !teamId || !thumbnail) {
+      throw new BadRequestError("fields cant be empty");
+    }
+    const player = await Player.findByIdAndUpdate({ _id: playerId }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!player) {
+      throw new NotFoundError(`no PLAYER with id ${playerId}`);
+    }
+
+    res.status(StatusCodes.OK).json({
+      _id: player._id,
+      name: player.name,
+      teamId: player.teamId,
+      thumbnail: player.thumbnail,
+    });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+
 module.exports = {
   getPlayers,
   getPlayer,
   CreatePlayer,
   deletePlayer,
   RetrieveTeamPlayers,
+  updatePlayer,
 };
