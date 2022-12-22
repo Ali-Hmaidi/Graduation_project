@@ -73,7 +73,7 @@ const updateMatch = async (req, res) => {
     });
 
     if (!match) {
-      throw new NotFoundError(`no team with id ${matchId}`);
+      throw new NotFoundError(`no match with id ${matchId}`);
     }
 
     res.status(StatusCodes.OK).json({

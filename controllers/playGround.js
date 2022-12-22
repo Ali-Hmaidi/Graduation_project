@@ -72,7 +72,7 @@ const updatePlayGround = async (req, res) => {
     );
 
     if (!playGround) {
-      throw new NotFoundError(`no team with id ${playGroundId}`);
+      throw new NotFoundError(`no playGround with id ${playGroundId}`);
     }
 
     res.status(StatusCodes.OK).json({
