@@ -31,6 +31,11 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
   },
   address: String,
+  verified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 
   admin: {
     type: Boolean,

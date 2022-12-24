@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const Token = require("../models/Token");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const bcrypt = require("bcryptjs");
@@ -130,6 +130,28 @@ const changePassword = async (req, res) => {
   res.status(StatusCodes.OK).send();
 };
 
+const confirmEmail = async (req, res) => {
+  const user = await User.findOne({ _id: req.params.id });
+  if (!user) {
+    return res.status(StatusCodes.NOT_FOUND).send({ message: "Invalid link" });
+  }
+
+  const token = await Token.findOne({
+    userId: user._id,
+    token: req.params.token,
+  });
+  if (!token) {
+    return res.status(StatusCodes.NOT_FOUND).send({ message: "Invalid link" });
+  }
+
+  await User.findByIdAndUpdate({ _id: user._id }, { verified: true });
+  await token.remove();
+
+  res.status(StatusCodes.OK).send({ message: "Email Verified successfully" });
+};
+
+const forgotPassword = async (req, res) => {};
+
 module.exports = {
   getUsers,
   getUser,
@@ -137,4 +159,6 @@ module.exports = {
   deleteUser,
   updateUser,
   changePassword,
+  confirmEmail,
+  forgotPassword,
 };

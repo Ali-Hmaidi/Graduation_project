@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authenticateUser = require("../middleware/authentication");
 
 const {
   getUsers,
@@ -8,10 +9,21 @@ const {
   deleteUser,
   updateUser,
   changePassword,
+  confirmEmail,
+  forgotPassword,
 } = require("../controllers/user");
 
-router.get("/", getUsers).post("/", CreateUser);
-router.route("/:id").get(getUser).delete(deleteUser).patch(updateUser);
-router.route("/changepassword/:id").patch(changePassword);
+router
+  .get("/", authenticateUser, getUsers)
+  .post("/", authenticateUser, CreateUser);
+router
+  .route("/:id")
+  .get(authenticateUser, getUser)
+  .delete(authenticateUser, deleteUser)
+  .patch(authenticateUser, updateUser);
+router.route("/changepassword/:id").patch(authenticateUser, changePassword);
+
+router.route("/:id/verify/:token").get(confirmEmail);
+router.route("/forgot-password/:email").post(forgotPassword);
 
 module.exports = router;

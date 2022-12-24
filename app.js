@@ -47,7 +47,7 @@ app.use("/api/v1/teams", teamRouter);
 app.use("/api/v1/players", playerRouter);
 app.use("/api/v1/matches", matchesRouter);
 app.use("/api/v1/playGrounds", playGroundsRouter);
-app.use("/api/v1/users", authenticateUser, usersRouter);
+app.use("/api/v1/users", usersRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
