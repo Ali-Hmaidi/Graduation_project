@@ -10,7 +10,8 @@ const {
   updateUser,
   changePassword,
   confirmEmail,
-  forgotPassword,
+  sendPasswordResetEmail,
+  restPassword,
 } = require("../controllers/user");
 
 router
@@ -24,6 +25,7 @@ router
 router.route("/changepassword/:id").patch(authenticateUser, changePassword);
 
 router.route("/:id/verify/:token").get(confirmEmail);
-router.route("/forgot-password/:email").post(forgotPassword);
+router.route("/password-reset").post(sendPasswordResetEmail);
+router.route("/password-reset/:userId/:token").post(restPassword);
 
 module.exports = router;
