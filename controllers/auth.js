@@ -15,7 +15,7 @@ const register = async (req, res) => {
     token: crypto.randomBytes(32).toString("hex"),
   });
 
-  const url = `${process.env.BASE_URL}/users/${user._id}/verify/${emailToken.token}`;
+  const url = `${process.env.BASE_URL_BACK}/users/${user._id}/verify/${emailToken.token}`;
   await sendEmail(user.email, "Verify Email", url);
 
   //creating the token for the user to be loged in so we cant send it unless he vervied his email
@@ -50,7 +50,7 @@ const login = async (req, res) => {
         token: crypto.randomBytes(32).toString("hex"),
       });
 
-      const url = `${process.env.BASE_URL}/users/${user._id}/verify/${emailToken.token}`;
+      const url = `${process.env.BASE_URL_BACK}/users/${user._id}/verify/${emailToken.token}`;
       await sendEmail(user.email, "Verify Email", url);
     }
     return res

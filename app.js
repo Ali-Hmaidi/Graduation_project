@@ -20,6 +20,7 @@ const playerRouter = require("./routes/player");
 const matchesRouter = require("./routes/match");
 const playGroundsRouter = require("./routes/playGround");
 const usersRouter = require("./routes/user");
+const productRouter = require("./routes/products");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -48,6 +49,7 @@ app.use("/api/v1/players", playerRouter);
 app.use("/api/v1/matches", matchesRouter);
 app.use("/api/v1/playGrounds", playGroundsRouter);
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/products", productRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
