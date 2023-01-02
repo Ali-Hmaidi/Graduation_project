@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const Joi = require("joi");
 const crypto = require("crypto");
 const sendEmail = require("../middleware/sendEmail");
+const path = require("path");
 
 const getUsers = async (req, res) => {
   const isAdmin = req.user.admin;
@@ -150,7 +151,7 @@ const confirmEmail = async (req, res) => {
   await User.findByIdAndUpdate({ _id: user._id }, { verified: true });
   await token.remove();
 
-  res.status(StatusCodes.OK).send({ message: "Email Verified successfully" });
+  res.status(StatusCodes.OK).sendFile(path.resolve("./src/success.html"));
 };
 
 const sendPasswordResetEmail = async (req, res) => {
