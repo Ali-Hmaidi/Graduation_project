@@ -53,7 +53,7 @@ const deleteTeam = async (req, res) => {
 
 const updateTeam = async (req, res) => {
   const {
-    body: { name, thumbnail, describtion, wins, losses, ties, matchesPlayed },
+    body: { name, thumbnail, descrption, wins, losses, ties, matchesPlayed },
     params: { id: teamId },
   } = req;
 
@@ -61,7 +61,7 @@ const updateTeam = async (req, res) => {
 
   if (isAdmin) {
     if (
-      (!name || !thumbnail || !describtion || wins, losses, ties, matchesPlayed)
+      (!name || !thumbnail || !description || wins, losses, ties, matchesPlayed)
     ) {
       throw new BadRequestError("fields cant be empty");
     }
@@ -78,7 +78,7 @@ const updateTeam = async (req, res) => {
       _id: team._id,
       name: team.name,
       thumbnail: team.thumbnail,
-      describtion: team.describtion,
+      description: team.description,
       wins: team.wins,
       losses: team.losses,
       ties: team.ties,
