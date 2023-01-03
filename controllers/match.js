@@ -1,4 +1,6 @@
 const Match = require("../models/Match");
+const Team = require("../models/Team");
+const PlayGround = require("../models/PlayGround");
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
@@ -23,13 +25,24 @@ const getMatch = async (req, res) => {
     params: { id: matchId },
   } = req;
 
-  const match = await Match.findOne({
+  let match = await Match.findOne({
     _id: matchId,
   });
 
   if (!match) {
     throw new NotFoundError(`no match  with id ${matchId}`);
   }
+
+  const firstTeam = await Team.findOne({ _id: match.firstTeamId });
+  const secondTeam = await Team.findOne({ _id: match.secondTeamId });
+  const playGround = await PlayGround.findOne({ _id: match.playGround });
+
+  if (!firstTeam || !secondTeam || !playGround) {
+    throw new NotFoundError(`no match  with found with this properites`);
+  }
+  match.firstTeamId = firstTeam;
+  match.secondTeamId = secondTeam;
+  match.playGround = playGround;
 
   res.status(StatusCodes.OK).json({ match });
 };

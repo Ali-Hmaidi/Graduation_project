@@ -17,6 +17,7 @@ const MatchesSchema = new mongoose.Schema({
     ],
     required: true,
   },
+  Description: String,
   status: {
     type: String,
     enum: ["comingSoon", "onGoing", "endded"],
