@@ -37,6 +37,10 @@ const MatchesSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  bigMatch: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 function validateteams(team) {

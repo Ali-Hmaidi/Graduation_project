@@ -78,7 +78,14 @@ const deleteMatch = async (req, res) => {
 
 const updateMatch = async (req, res) => {
   const {
-    body: { firstTeamId, secondTeamId, playGround, status, matchDate },
+    body: {
+      firstTeamId,
+      secondTeamId,
+      playGround,
+      status,
+      matchDate,
+      bigMatch,
+    },
     params: { id: matchId },
   } = req;
 
@@ -104,6 +111,7 @@ const updateMatch = async (req, res) => {
       playGround: match.playGround,
       status: match.status,
       matchDate: match.matchDate,
+      bigMatch: match.bigMatch,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
