@@ -7,6 +7,14 @@ const { NotFoundError, BadRequestError } = require("../errors");
 
 const getMatches = async (req, res) => {
   const matches = await Match.find({});
+
+  const today = new Date();
+  for (var i = 0; i < matches.length; i++) {
+    if (today.toDateString() === matches[i].matchDate.toDateString()) {
+      matches[i].isToday = true;
+    }
+  }
+
   res.status(StatusCodes.OK).json({ matches });
 };
 

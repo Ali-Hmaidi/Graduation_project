@@ -33,6 +33,10 @@ const MatchesSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  isToday: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 function validateteams(team) {
