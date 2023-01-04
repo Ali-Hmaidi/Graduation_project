@@ -8,11 +8,22 @@ const { NotFoundError, BadRequestError } = require("../errors");
 const getMatches = async (req, res) => {
   const matches = await Match.find({});
 
+  //for refreshing the today matches you need to call this req.
   const today = new Date();
   for (var i = 0; i < matches.length; i++) {
     if (today.toDateString() === matches[i].matchDate.toDateString()) {
       matches[i].isToday = true;
     }
+
+    const firstTeam = await Team.findOne({ _id: matches[i].firstTeamId });
+    const secondTeam = await Team.findOne({ _id: matches[i].secondTeamId });
+
+    if (!firstTeam || !secondTeam) {
+      throw new NotFoundError(`no match  with found with this properites`);
+    }
+
+    matches[i].firstTeamId = firstTeam;
+    matches[i].secondTeamId = secondTeam;
   }
 
   res.status(StatusCodes.OK).json({ matches });
