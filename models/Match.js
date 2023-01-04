@@ -40,6 +40,7 @@ const MatchesSchema = new mongoose.Schema({
   bigMatch: {
     type: Boolean,
     default: false,
+    index: true,
   },
 });
 

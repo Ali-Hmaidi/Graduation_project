@@ -8,9 +8,12 @@ const {
   getMatch,
   deleteMatch,
   updateMatch,
+  getBigMatches,
 } = require("../controllers/match");
 
 router.get("/", getMatches).post("/", authenticateUser, CreateMatch);
+router.route("/bigmatches").get(getBigMatches);
+
 router
   .get("/:id", getMatch)
   .delete("/:id", authenticateUser, deleteMatch)

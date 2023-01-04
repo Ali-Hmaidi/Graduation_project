@@ -18,6 +18,23 @@ const getMatches = async (req, res) => {
   res.status(StatusCodes.OK).json({ matches });
 };
 
+const getBigMatches = async (req, res) => {
+  const matches = await Match.find({ bigMatch: true });
+
+  for (var i = 0; i < matches.length; i++) {
+    const firstTeam = await Team.findOne({ _id: matches[i].firstTeamId });
+    const secondTeam = await Team.findOne({ _id: matches[i].secondTeamId });
+
+    if (!firstTeam || !secondTeam) {
+      throw new NotFoundError(`no match  with found with this properites`);
+    }
+
+    matches[i].firstTeamId = firstTeam;
+    matches[i].secondTeamId = secondTeam;
+  }
+
+  res.status(StatusCodes.OK).json({ matches });
+};
 const CreateMatch = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
@@ -124,4 +141,5 @@ module.exports = {
   getMatch,
   deleteMatch,
   updateMatch,
+  getBigMatches,
 };
