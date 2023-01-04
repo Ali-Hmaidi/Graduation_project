@@ -11,7 +11,7 @@ const TeamsSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
   },
-  describtion: String,
+  description: String,
   wins: Number,
   losses: Number,
   ties: Number,
