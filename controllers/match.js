@@ -113,6 +113,7 @@ const updateMatch = async (req, res) => {
       status,
       matchDate,
       bigMatch,
+      isToday,
     },
     params: { id: matchId },
   } = req;
@@ -140,6 +141,7 @@ const updateMatch = async (req, res) => {
       status: match.status,
       matchDate: match.matchDate,
       bigMatch: match.bigMatch,
+      isToday: match.isToday,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
