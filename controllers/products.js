@@ -69,8 +69,65 @@ const getAllProducts = async (req, res) => {
 const CreateProduct = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
-    const product = await Match.create(req.body);
+    const product = await Product.create(req.body);
     res.status(StatusCodes.CREATED).json({ success: true, product });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  const isAdmin = req.user.admin;
+  const {
+    params: { id: productId },
+  } = req;
+
+  if (isAdmin) {
+    const product = await Product.findByIdAndRemove({
+      _id: productId,
+    });
+
+    if (!product) {
+      throw new NotFoundError(`no product with id ${productId}`);
+    }
+
+    res.status(StatusCodes.OK).json({ success: true });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+const updateProduct = async (req, res) => {
+  const {
+    body: { name, price, featured, rating, createdAt, company, thumbnail },
+    params: { id: productId },
+  } = req;
+
+  const isAdmin = req.user.admin;
+
+  if (isAdmin) {
+    const product = await Product.findByIdAndUpdate(
+      { _id: productId },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!product) {
+      throw new NotFoundError(`no product with id ${productId}`);
+    }
+
+    res.status(StatusCodes.OK).json({
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      featured: product.featured,
+      rating: product.rating,
+      createdAt: product.createdAt,
+      company: product.company,
+      thumbnail: product.thumbnail,
+    });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
   }
@@ -80,4 +137,6 @@ module.exports = {
   getAllProductsStatic,
   getAllProducts,
   CreateProduct,
+  deleteProduct,
+  updateProduct,
 };
