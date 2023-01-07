@@ -28,6 +28,11 @@ const ProductsSchema = new mongoose.Schema({
       message: "{VALUE} is not supported",
     },
   },
+  thumbnail: {
+    type: String,
+    default:
+      "https://apollobattery.com.au/wp-content/uploads/2022/08/default-product-image.png",
+  },
 });
 
 module.exports = mongoose.model("Product", ProductsSchema);

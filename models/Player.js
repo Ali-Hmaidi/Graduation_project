@@ -14,7 +14,7 @@ const PlayersSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
     default:
-      "https://cdn.britannica.com/19/233519-050-F0604A51/LeBron-James-Los-Angeles-Lakers-Staples-Center-2019.jpg",
+      "https://www.contentviewspro.com/wp-content/uploads/2017/07/default_image.png",
   },
 });
 

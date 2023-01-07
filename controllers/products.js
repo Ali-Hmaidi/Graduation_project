@@ -66,7 +66,18 @@ const getAllProducts = async (req, res) => {
   res.status(200).json({ products, nbHits: products.length });
 };
 
+const CreateProduct = async (req, res) => {
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const product = await Match.create(req.body);
+    res.status(StatusCodes.CREATED).json({ success: true, product });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+
 module.exports = {
   getAllProductsStatic,
   getAllProducts,
+  CreateProduct,
 };

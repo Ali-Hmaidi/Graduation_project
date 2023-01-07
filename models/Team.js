@@ -10,6 +10,8 @@ const TeamsSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
+    default:
+      "https://www.espn.com/i/teamlogos/soccer/500/default-team-logo-500.png?h=100&w=100",
   },
   description: String,
   wins: Number,
