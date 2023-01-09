@@ -2,6 +2,7 @@ const Team = require("../models/Team");
 
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const Player = require("../models/Player");
 
 const getTeams = async (req, res) => {
   const teams = await Team.find({});
@@ -29,7 +30,9 @@ const getTeam = async (req, res) => {
     throw new NotFoundError(`no team  with id ${teamId}`);
   }
 
-  res.status(StatusCodes.OK).json({ team });
+  const players = await Player.find({ teamId: team._id });
+
+  res.status(StatusCodes.OK).json({ team, playersList: players });
 };
 
 const deleteTeam = async (req, res) => {
