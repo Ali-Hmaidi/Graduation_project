@@ -8,6 +8,7 @@ const {
   updateProduct,
   deleteProduct,
   CreateProduct,
+  getProduct,
 } = require("../controllers/products");
 
 router.route("/").get(getAllProducts).post(authenticateUser, CreateProduct);
@@ -15,6 +16,6 @@ router.route("/static").get(getAllProductsStatic);
 router
   .route("/:id")
   .delete(authenticateUser, deleteProduct)
-  .patch(authenticateUser, updateProduct);
-
+  .patch(authenticateUser, updateProduct)
+  .get(getProduct);
 module.exports = router;

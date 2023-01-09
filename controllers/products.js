@@ -66,6 +66,20 @@ const getAllProducts = async (req, res) => {
   res.status(200).json({ products, nbHits: products.length });
 };
 
+const getProduct = async (req, res) => {
+  const productId = req.params.id;
+
+  const product = await Product.findOne({
+    _id: productId,
+  });
+
+  if (!product) {
+    throw new NotFoundError(`no product  with id ${productId}`);
+  }
+
+  res.status(StatusCodes.OK).json({ product });
+};
+
 const CreateProduct = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
@@ -138,5 +152,6 @@ module.exports = {
   getAllProducts,
   CreateProduct,
   deleteProduct,
+  getProduct,
   updateProduct,
 };
