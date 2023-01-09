@@ -7,6 +7,7 @@ const Joi = require("joi");
 const crypto = require("crypto");
 const sendEmail = require("../middleware/sendEmail");
 const path = require("path");
+const Orders = require("../models/Orders");
 
 const getUsers = async (req, res) => {
   const isAdmin = req.user.admin;
@@ -22,6 +23,7 @@ const CreateUser = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
     const user = await User.create(req.body);
+    await Orders.create({ userId: user._id });
     res.status(StatusCodes.CREATED).json({ success: true, user });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
