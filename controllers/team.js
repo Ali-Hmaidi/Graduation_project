@@ -5,7 +5,29 @@ const { BadRequestError, NotFoundError } = require("../errors");
 const Player = require("../models/Player");
 
 const getTeams = async (req, res) => {
-  const teams = await Team.find({});
+  const { name, sort } = req.query;
+  const queryObject = {};
+  if (name) {
+    queryObject.name = { $regex: name, $options: "i" };
+  }
+  let result = Team.find(queryObject);
+
+  if (sort) {
+    const sortList = sort.split(",").join(" ");
+    result = result.sort(sortList);
+  } else {
+    result = result.sort("createdAt");
+  }
+
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  result = result.skip(skip).limit(limit);
+
+  const teams = await result;
+
+  //const teams = await Team.find({});
   res.status(StatusCodes.OK).json({ teams });
 };
 
