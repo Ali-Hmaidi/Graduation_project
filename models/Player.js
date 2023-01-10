@@ -16,6 +16,15 @@ const PlayersSchema = new mongoose.Schema({
     default:
       "https://www.contentviewspro.com/wp-content/uploads/2017/07/default_image.png",
   },
+  age: {
+    type: Number,
+    default: 25,
+  },
+  description: {
+    type: String,
+    default:
+      "undifeated player who is plaing for this team for 2 years, good at playing",
+  },
 });
 
 module.exports = mongoose.model("Player", PlayersSchema);

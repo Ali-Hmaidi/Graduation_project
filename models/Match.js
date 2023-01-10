@@ -42,6 +42,10 @@ const MatchesSchema = new mongoose.Schema({
     default: false,
     index: true,
   },
+  result: {
+    type: { team1Score: Number, team2Score: Number },
+    default: { team1Score: 0, team2Score: 0 },
+  },
 });
 
 function validateteams(team) {

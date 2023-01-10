@@ -106,24 +106,13 @@ const deleteMatch = async (req, res) => {
 
 const updateMatch = async (req, res) => {
   const {
-    body: {
-      firstTeamId,
-      secondTeamId,
-      playGround,
-      status,
-      matchDate,
-      bigMatch,
-      isToday,
-    },
+    body: { status },
     params: { id: matchId },
   } = req;
 
   const isAdmin = req.user.admin;
 
   if (isAdmin) {
-    if ((!firstTeamId || !secondTeamId || !playGround || !status, !matchDate)) {
-      throw new BadRequestError("fields cant be empty");
-    }
     const match = await Match.findByIdAndUpdate({ _id: matchId }, req.body, {
       new: true,
       runValidators: true,
@@ -132,16 +121,73 @@ const updateMatch = async (req, res) => {
     if (!match) {
       throw new NotFoundError(`no match with id ${matchId}`);
     }
+    const firstTeamId = match.firstTeamId;
+    const secondTeamId = match.secondTeamId;
+
+    if (req.body.result && req.body.status) {
+      const { team1Score, team2Score } = req.body.result;
+
+      if (status === "endded") {
+        if (team1Score > team2Score) {
+          const team1 = await Team.findOne({ _id: firstTeamId });
+
+          await Team.findByIdAndUpdate(
+            { _id: firstTeamId },
+            {
+              wins: ++team1.wins,
+              matchesPlayed: ++team1.matchesPlayed,
+              points: team1.points + 2,
+              GF: team1.GF + team1Score,
+              GA: team1.GA + team2Score,
+              GD: team1.GD + (team1Score - team2Score),
+            }
+          );
+
+          const team2 = await Team.findOne({ _id: secondTeamId });
+          await Team.findByIdAndUpdate(
+            { _id: secondTeamId },
+            {
+              losses: ++team2.losses,
+              matchesPlayed: ++team2.matchesPlayed,
+              points: team2.points + 1,
+              GF: team2.GF + team2Score,
+              GA: team2.GA + team1Score,
+              GD: team2.GD + (team2Score - team1Score),
+            }
+          );
+        } else if (team1Score < team2Score) {
+          const team2 = await Team.findOne({ _id: secondTeamId });
+
+          await Team.findByIdAndUpdate(
+            { _id: secondTeamId },
+            {
+              wins: ++team2.wins,
+              matchesPlayed: ++team2.matchesPlayed,
+              points: team2.points + 2,
+              GF: team2.GF + team2Score,
+              GA: team2.GA + team1Score,
+              GD: team2.GD + (team2Score - team1Score),
+            }
+          );
+
+          const team1 = await Team.findOne({ _id: firstTeamId });
+          await Team.findByIdAndUpdate(
+            { _id: firstTeamId },
+            {
+              losses: ++team1.losses,
+              matchesPlayed: ++team1.matchesPlayed,
+              points: team1.points + 1,
+              GF: team1.GF + team1Score,
+              GA: team1.GA + team2Score,
+              GD: team1.GD + (team1Score - team2Score),
+            }
+          );
+        }
+      }
+    }
 
     res.status(StatusCodes.OK).json({
-      _id: match._id,
-      firstTeamId: match.firstTeamId,
-      secondTeamId: match.secondTeamId,
-      playGround: match.playGround,
-      status: match.status,
-      matchDate: match.matchDate,
-      bigMatch: match.bigMatch,
-      isToday: match.isToday,
+      match,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });

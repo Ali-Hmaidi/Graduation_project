@@ -14,10 +14,22 @@ const TeamsSchema = new mongoose.Schema({
       "https://www.espn.com/i/teamlogos/soccer/500/default-team-logo-500.png?h=100&w=100",
   },
   description: String,
-  wins: Number,
-  losses: Number,
-  ties: Number,
-  matchesPlayed: Number,
+
+  wins: { type: Number, default: 0 },
+
+  losses: { type: Number, default: 0 },
+
+  ties: { type: Number, default: 0 },
+
+  matchesPlayed: { type: Number, default: 0 },
+
+  points: { type: Number, default: 0 },
+
+  GF: { type: Number, default: 0 },
+
+  GA: { type: Number, default: 0 },
+
+  GD: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("Team", TeamsSchema);
