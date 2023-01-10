@@ -2,6 +2,7 @@ const Product = require("../models/Product");
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
+const Review = require("../models/Review");
 
 const getAllProductsStatic = async (req, res) => {
   const products = await Product.find({});
@@ -77,6 +78,9 @@ const getProduct = async (req, res) => {
     throw new NotFoundError(`no product  with id ${productId}`);
   }
 
+  const reviews = await Review.find({ ProductId: product._id });
+  product.reviews = reviews;
+
   res.status(StatusCodes.OK).json({ product });
 };
 
@@ -147,6 +151,50 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const addReview = async (req, res) => {
+  const userId = req.user.userId;
+  const rev = req.body.review;
+  const id = req.params.id;
+
+  const review = await Review.create({
+    userId: userId,
+    ProductId: id,
+    review: rev,
+  });
+
+  let product = await Product.findOne({ _id: id });
+  if (!product) {
+    throw new NotFoundError("NO PRODUCT WITH THIS ID");
+  }
+  const reviews = await Review.find({ ProductId: id });
+  product.reviews = reviews;
+  res.status(StatusCodes.CREATED).json({ product });
+};
+const deleteReview = async (req, res) => {
+  const {
+    user: { userId },
+    params: { id: reviewId },
+  } = req;
+
+  const isAdmin = req.user.admin;
+
+  const id = await Review.findOne({ _id: reviewId });
+  if (id.userId != userId || !isAdmin) {
+    throw new BadRequestError("a user can only delete reviews that he created");
+  }
+
+  const review = await Review.findByIdAndRemove({
+    _id: reviewId,
+    userId: userId,
+  });
+
+  if (!review) {
+    throw new NotFoundError(`no review with id ${reviewId}`);
+  }
+
+  res.status(StatusCodes.OK).send();
+};
+
 module.exports = {
   getAllProductsStatic,
   getAllProducts,
@@ -154,4 +202,6 @@ module.exports = {
   deleteProduct,
   getProduct,
   updateProduct,
+  addReview,
+  deleteReview,
 };

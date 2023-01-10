@@ -33,6 +33,15 @@ const ProductsSchema = new mongoose.Schema({
     default:
       "https://apollobattery.com.au/wp-content/uploads/2022/08/default-product-image.png",
   },
+  reviews: {
+    type: [{}],
+  },
+
+  description: {
+    type: String,
+    default:
+      "Item measurements ex: lengthInformation about the models height and clothing sizeWhether your clothing runs small, large or true to sizeDetails about the fitCare instructions Material",
+  },
 });
 
 module.exports = mongoose.model("Product", ProductsSchema);

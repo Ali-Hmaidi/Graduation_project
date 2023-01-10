@@ -9,13 +9,21 @@ const {
   deleteProduct,
   CreateProduct,
   getProduct,
+  addReview,
+  deleteReview,
 } = require("../controllers/products");
 
 router.route("/").get(getAllProducts).post(authenticateUser, CreateProduct);
 router.route("/static").get(getAllProductsStatic);
 router
+  .route("/reviews/:id")
+  .post(authenticateUser, addReview)
+  .delete(authenticateUser, deleteReview);
+
+router
   .route("/:id")
   .delete(authenticateUser, deleteProduct)
   .patch(authenticateUser, updateProduct)
   .get(getProduct);
+
 module.exports = router;
