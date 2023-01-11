@@ -18,10 +18,10 @@ const getMyOrder = async (req, res) => {
 
   let order = await Order.findOne({ userId: userId });
 
-  for (var i = 0; i < order.products.length; i++) {
-    const product = await Product.findById({ _id: order.products[i] });
-    order.products[i] = product;
-  }
+  // for (var i = 0; i < order.products.length; i++) {
+  //   const product = await Product.findById({ _id: order.products[i] });
+  //   order.products[i] = product;
+  // }
   res.status(StatusCodes.OK).json({ order });
 };
 
