@@ -4,6 +4,6 @@ const router = express.Router();
 const { getVedio, getAllVedios } = require("../controllers/vedios");
 
 router.route("/").get(getAllVedios);
-router.route("/:matchId").get(getVedio);
+router.route("/:videoName").get(getVedio);
 
 module.exports = router;

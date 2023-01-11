@@ -46,6 +46,10 @@ const MatchesSchema = new mongoose.Schema({
     type: { team1Score: Number, team2Score: Number },
     default: { team1Score: 0, team2Score: 0 },
   },
+  videoName: {
+    type: String,
+    default: "match1.mp4",
+  },
 });
 
 function validateteams(team) {

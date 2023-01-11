@@ -8,9 +8,7 @@ const getAllVedios = async (req, res) => {
 };
 
 const getVedio = async (req, res) => {
-  const {
-    params: { id: matchId },
-  } = req;
+  const videoName = req.params.videoName;
 
   const range = req.headers.range;
   if (!range) {
@@ -18,7 +16,12 @@ const getVedio = async (req, res) => {
     return;
   }
 
-  const videoPath = path.resolve("./src/vedios/match1.mp4");
+  const videoPath = path.resolve(`./src/vedios/${videoName}`);
+
+  if (!fs.existsSync(videoPath)) {
+    res.status(StatusCodes.NOT_FOUND).send("Match Video NOT found ");
+    return;
+  }
   const videoSize = fs.statSync(videoPath).size;
 
   const CHUNK_SIZE = 10 ** 6; // 1MB
