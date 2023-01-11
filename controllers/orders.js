@@ -47,7 +47,7 @@ const addOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   const {
-    body: { products },
+    body: { products, shipping },
   } = req;
 
   const userId = req.user.userId;
@@ -55,6 +55,19 @@ const updateOrder = async (req, res) => {
   if (!products) {
     throw new BadRequestError("products  field cant be empty");
   }
+  if (!shipping) {
+    req.body.shipping = 0;
+  }
+
+  req.body.subtotal = 0;
+  for (var i = 0; i < req.body.products.length; i++) {
+    const product = await Product.findById({ _id: req.body.products[i] });
+
+    req.body.subtotal += product.price;
+  }
+
+  req.body.total = req.body.subtotal + req.body.shipping;
+
   const order = await Order.findOneAndUpdate({ userId: userId }, req.body, {
     new: true,
     runValidators: true,
