@@ -25,6 +25,18 @@ const getMyOrder = async (req, res) => {
   res.status(StatusCodes.OK).json({ order });
 };
 
+const getMyOrderProducts = async (req, res) => {
+  const userId = req.user.userId;
+
+  let order = await Order.findOne({ userId: userId });
+
+  for (var i = 0; i < order.products.length; i++) {
+    const product = await Product.findById({ _id: order.products[i] });
+    order.products[i] = product;
+  }
+  res.status(StatusCodes.OK).json({ order });
+};
+
 const addOrder = async (req, res) => {
   //   req.body.userId = req.user.userId;
 
@@ -63,4 +75,5 @@ module.exports = {
   getMyOrder,
   getAllOrders,
   updateOrder,
+  getMyOrderProducts,
 };
