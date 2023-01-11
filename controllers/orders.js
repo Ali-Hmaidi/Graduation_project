@@ -48,12 +48,12 @@ const updateOrder = async (req, res) => {
     runValidators: true,
   });
 
-  if (order.products.length > 0) {
-    for (var i = 0; i < order.products.length; i++) {
-      const product = await Product.findById({ _id: order.products[i] });
-      order.products[i] = product;
-    }
-  }
+  // if (order.products.length > 0) {
+  //   for (var i = 0; i < order.products.length; i++) {
+  //     const product = await Product.findById({ _id: order.products[i] });
+  //     order.products[i] = product;
+  //   }
+  // }
 
   res.status(StatusCodes.OK).json({ order });
 };
