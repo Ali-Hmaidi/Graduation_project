@@ -17,6 +17,7 @@ const getMatches = async (req, res) => {
 
     const firstTeam = await Team.findOne({ _id: matches[i].firstTeamId });
     const secondTeam = await Team.findOne({ _id: matches[i].secondTeamId });
+    const playGround = await PlayGround.findOne({ _id: matches[i].playGround });
 
     // if (!firstTeam || !secondTeam) {
     //   throw new NotFoundError(`no match  with found with this properites`);
@@ -24,6 +25,7 @@ const getMatches = async (req, res) => {
 
     matches[i].firstTeamId = firstTeam;
     matches[i].secondTeamId = secondTeam;
+    matches[i].playGround = playGround;
   }
 
   res.status(StatusCodes.OK).json({ matches });

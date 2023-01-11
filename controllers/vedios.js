@@ -2,12 +2,16 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const path = require("path");
 const fs = require("fs");
+const formidable = require("formidable");
+const { getVideoDuration } = require("get-video-duration");
+const Match = require("../models/Match");
+const { request } = require("http");
 
 const getAllVedios = async (req, res) => {
   res.status(StatusCodes.OK).send("all vedios");
 };
 
-const getVedio = async (req, res) => {
+const getVideo = async (req, res) => {
   const videoName = req.params.videoName;
 
   const range = req.headers.range;
@@ -47,7 +51,40 @@ const getVedio = async (req, res) => {
   videoStream.pipe(res);
 };
 
+const uploadVideo = async (req, res) => {
+  const isAdmin = req.user.admin;
+  const matchId = req.params.matchId;
+  if (isAdmin) {
+    const formData = new formidable.IncomingForm();
+
+    formData.maxFileSize = 1000 * 1024 * 1024;
+
+    var title;
+
+    formData.parse(req, function (error, fields, files) {
+      title = fields.title;
+      const oldPathViedo = files.video.path;
+      const newPath = path.resolve(`./src/vedios/${title}`);
+
+      fs.rename(oldPathViedo, newPath);
+    });
+
+    const match = await Match.findByIdAndUpdate(
+      { _id: matchId },
+      { videoName: title }
+    );
+    if (!match) {
+      throw NotFoundError(`no match found with Id ${matchId}`);
+    }
+
+    res.status(StatusCodes.OK).json({ success: true, match });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+
 module.exports = {
-  getVedio,
+  getVideo,
   getAllVedios,
+  uploadVideo,
 };
