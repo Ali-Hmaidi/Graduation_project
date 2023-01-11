@@ -59,25 +59,26 @@ const uploadVideo = async (req, res) => {
 
     formData.maxFileSize = 1000 * 1024 * 1024;
 
-    var title;
-
     formData.parse(req, function (error, fields, files) {
       title = fields.title;
-      const oldPathViedo = files.video.path;
-      const newPath = path.resolve(`./src/vedios/${title}`);
+      const oldPathViedo = files.video.filepath;
+      const newPath = path.resolve(
+        `./src/vedios/${files.video.originalFilename}`
+      );
+      var vidname = files.video.originalFilename;
 
-      fs.rename(oldPathViedo, newPath);
+      fs.rename(oldPathViedo, newPath, async function (error) {
+        const match = await Match.findByIdAndUpdate(
+          { _id: matchId },
+          { videoName: vidname }
+        );
+        if (!match) {
+          throw NotFoundError(`no match found with Id ${matchId}`);
+        }
+
+        res.status(StatusCodes.OK).json({ success: true, match });
+      });
     });
-
-    const match = await Match.findByIdAndUpdate(
-      { _id: matchId },
-      { videoName: title }
-    );
-    if (!match) {
-      throw NotFoundError(`no match found with Id ${matchId}`);
-    }
-
-    res.status(StatusCodes.OK).json({ success: true, match });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
   }
