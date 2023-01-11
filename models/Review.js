@@ -1,21 +1,24 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
-const reviewsSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
-    required: [true, "MUST PROVIDE user"],
-  },
-  creatorName: String,
-  ProductId: {
-    type: mongoose.Types.ObjectId,
-    REF: "Product",
-    required: true,
-    index: true,
-  },
+const reviewsSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: [true, "MUST PROVIDE user"],
+    },
+    creatorName: String,
+    ProductId: {
+      type: mongoose.Types.ObjectId,
+      REF: "Product",
+      required: true,
+      index: true,
+    },
 
-  review: String,
-});
+    review: String,
+  },
+  { timestamps: true }
+);
 
 reviewsSchema.index(
   { userId: 1, ProductId: 1 },
