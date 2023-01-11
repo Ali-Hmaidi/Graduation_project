@@ -41,7 +41,11 @@ app.use(
 
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(xss());
 
 app.get("/", (req, res) => {
