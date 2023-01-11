@@ -2,7 +2,7 @@ require("dotenv").config();
 require("express-async-errors");
 
 //security packages
-const helmet = require("helmet");
+//const helmet = require("helmet");
 const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
@@ -40,7 +40,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use(helmet());
+//app.use(helmet());
 app.use(
   cors({
     origin: "*",
