@@ -137,14 +137,7 @@ const updateProduct = async (req, res) => {
     }
 
     res.status(StatusCodes.OK).json({
-      _id: product._id,
-      name: product.name,
-      price: product.price,
-      featured: product.featured,
-      rating: product.rating,
-      createdAt: product.createdAt,
-      company: product.company,
-      thumbnail: product.thumbnail,
+      product,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
