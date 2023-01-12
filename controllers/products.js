@@ -154,13 +154,13 @@ const addReview = async (req, res) => {
     ProductId: id,
     review: rev,
   });
+  const reviews = await Review.find({ ProductId: id });
 
-  let product = await Product.findOne({ _id: id });
+  product = await Product.findOneAndUpdate({ _id: id }, { reviews: reviews });
   if (!product) {
     throw new NotFoundError("NO PRODUCT WITH THIS ID");
   }
-  const reviews = await Review.find({ ProductId: id });
-  product.reviews = reviews;
+
   res.status(StatusCodes.CREATED).json({ product });
 };
 const deleteReview = async (req, res) => {
@@ -188,6 +188,13 @@ const deleteReview = async (req, res) => {
   res.status(StatusCodes.OK).send();
 };
 
+const GetReviewsForProduct = async (req, res) => {
+  const productId = req.params.id;
+
+  const reviews = await Review.find({ ProductId: productId }).sort("createdAt");
+  res.status(StatusCodes.OK).json({ reviews });
+};
+
 module.exports = {
   getAllProductsStatic,
   getAllProducts,
@@ -197,4 +204,5 @@ module.exports = {
   updateProduct,
   addReview,
   deleteReview,
+  GetReviewsForProduct,
 };

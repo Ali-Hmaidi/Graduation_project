@@ -11,6 +11,7 @@ const {
   getProduct,
   addReview,
   deleteReview,
+  GetReviewsForProduct,
 } = require("../controllers/products");
 
 router.route("/").get(getAllProducts).post(authenticateUser, CreateProduct);
@@ -18,6 +19,7 @@ router.route("/static").get(getAllProductsStatic);
 router
   .route("/reviews/:id")
   .post(authenticateUser, addReview)
+  .get(GetReviewsForProduct)
   .delete(authenticateUser, deleteReview);
 
 router
