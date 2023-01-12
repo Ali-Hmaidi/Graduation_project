@@ -3,6 +3,7 @@ const Team = require("../models/Team");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const Player = require("../models/Player");
+const Match = require("../models/Match");
 
 const getTeams = async (req, res) => {
   const { name, sort } = req.query;
@@ -78,36 +79,42 @@ const deleteTeam = async (req, res) => {
 
 const updateTeam = async (req, res) => {
   const {
-    body: { name, thumbnail, describtion, wins, losses, ties, matchesPlayed },
     params: { id: teamId },
   } = req;
 
   const isAdmin = req.user.admin;
 
   if (isAdmin) {
-    if (
-      (!name || !thumbnail || !describtion || wins, losses, ties, matchesPlayed)
-    ) {
-      throw new BadRequestError("fields cant be empty");
-    }
     const team = await Team.findByIdAndUpdate({ _id: teamId }, req.body, {
       new: true,
       runValidators: true,
     });
-
     if (!team) {
       throw new NotFoundError(`no team with id ${teamId}`);
     }
 
+    const matches = await Match.find({});
+
+    for (var i = 0; i < matches.length; i++) {
+      if (String(teamId) === String(matches[i].firstTeamId._id)) {
+        const updatedMatch = await Match.findByIdAndUpdate(
+          { _id: matches[i]._id },
+          {
+            firstTeamId: team,
+          }
+        );
+      } else if (String(teamId) === String(matches[i].secondTeamId._id)) {
+        const updatedMatch = await Match.findByIdAndUpdate(
+          { _id: matches[i]._id },
+          {
+            secondTeamId: team,
+          }
+        );
+      }
+    }
+
     res.status(StatusCodes.OK).json({
-      _id: team._id,
-      name: team.name,
-      thumbnail: team.thumbnail,
-      describtion: team.describtion,
-      wins: team.wins,
-      losses: team.losses,
-      ties: team.ties,
-      matchesPlayed: team.matchesPlayed,
+      team,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });

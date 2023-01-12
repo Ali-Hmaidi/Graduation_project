@@ -2,6 +2,7 @@ const PlayGround = require("../models/PlayGround");
 
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const Match = require("../models/Match");
 
 const getPlayGrounds = async (req, res) => {
   const playGrounds = await PlayGround.find({});
@@ -52,16 +53,12 @@ const deletePlayGround = async (req, res) => {
 
 const updatePlayGround = async (req, res) => {
   const {
-    body: { name, location, description, numberOfSeats },
     params: { id: playGroundId },
   } = req;
 
   const isAdmin = req.user.admin;
 
   if (isAdmin) {
-    if (!name || !location || !description || !numberOfSeats) {
-      throw new BadRequestError("fields cant be empty");
-    }
     const playGround = await PlayGround.findByIdAndUpdate(
       { _id: playGroundId },
       req.body,
@@ -70,17 +67,25 @@ const updatePlayGround = async (req, res) => {
         runValidators: true,
       }
     );
-
     if (!playGround) {
       throw new NotFoundError(`no playGround with id ${playGroundId}`);
     }
 
+    const matches = await Match.find({});
+
+    for (var i = 0; i < matches.length; i++) {
+      if (String(playGroundId) === String(matches[i].playGround._id)) {
+        const updatedMatch = await Match.findByIdAndUpdate(
+          { _id: matches[i]._id },
+          {
+            playGround: playGround,
+          }
+        );
+      }
+    }
+
     res.status(StatusCodes.OK).json({
-      _id: playGround._id,
-      name: playGround.name,
-      location: playGround.location,
-      description: playGround.description,
-      numberOfSeats: playGround.numberOfSeats,
+      playGround,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });

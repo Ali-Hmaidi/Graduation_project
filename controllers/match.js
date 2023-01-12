@@ -9,24 +9,7 @@ const getMatches = async (req, res) => {
   const matches = await Match.find({});
 
   //for refreshing the today matches you need to call this req.
-  const today = new Date();
-  for (var i = 0; i < matches.length; i++) {
-    if (today.toDateString() === matches[i].matchDate.toDateString()) {
-      matches[i].isToday = true;
-    }
-
-    const firstTeam = await Team.findOne({ _id: matches[i].firstTeamId });
-    const secondTeam = await Team.findOne({ _id: matches[i].secondTeamId });
-    const playGround = await PlayGround.findOne({ _id: matches[i].playGround });
-
-    // if (!firstTeam || !secondTeam) {
-    //   throw new NotFoundError(`no match  with found with this properites`);
-    // }
-
-    matches[i].firstTeamId = firstTeam;
-    matches[i].secondTeamId = secondTeam;
-    matches[i].playGround = playGround;
-  }
+  //const today = new Date();
 
   res.status(StatusCodes.OK).json({ matches });
 };
@@ -34,25 +17,28 @@ const getMatches = async (req, res) => {
 const getBigMatches = async (req, res) => {
   const matches = await Match.find({ bigMatch: true });
 
-  for (var i = 0; i < matches.length; i++) {
-    const firstTeam = await Team.findOne({ _id: matches[i].firstTeamId });
-    const secondTeam = await Team.findOne({ _id: matches[i].secondTeamId });
-
-    if (!firstTeam || !secondTeam) {
-      throw new NotFoundError(`no match  with found with this properites`);
-    }
-
-    matches[i].firstTeamId = firstTeam;
-    matches[i].secondTeamId = secondTeam;
-  }
-
   res.status(StatusCodes.OK).json({ matches });
 };
+
 const CreateMatch = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
     const match = await Match.create(req.body);
-    res.status(StatusCodes.CREATED).json({ success: true, match });
+
+    const firstTeamId = await Team.findById({ _id: match.firstTeamId });
+    const secondTeamId = await Team.findById({ _id: match.secondTeamId });
+    const playGround = await PlayGround.findById({ _id: match.playGround });
+
+    const updatedMatch = await Match.findByIdAndUpdate(
+      { _id: match._id },
+      {
+        firstTeamId: firstTeamId,
+        secondTeamId: secondTeamId,
+        playGround: playGround,
+      }
+    );
+
+    res.status(StatusCodes.CREATED).json({ success: true, updatedMatch });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
   }
@@ -115,6 +101,26 @@ const updateMatch = async (req, res) => {
   const isAdmin = req.user.admin;
 
   if (isAdmin) {
+    const matchobj = await Match.findById({ _id: matchId });
+
+    const firstTeamIdobj = await Team.findById({
+      _id: matchobj.firstTeamId._id,
+    });
+    const secondTeamIdobj = await Team.findById({
+      _id: matchobj.secondTeamId._id,
+    });
+    const playGround = await PlayGround.findById({
+      _id: matchobj.playGround._id,
+    });
+    const updatedMatch = await Match.findByIdAndUpdate(
+      { _id: matchobj._id },
+      {
+        firstTeamId: firstTeamIdobj,
+        secondTeamId: secondTeamIdobj,
+        playGround: playGround,
+      }
+    );
+
     const match = await Match.findByIdAndUpdate({ _id: matchId }, req.body, {
       new: true,
       runValidators: true,
@@ -123,8 +129,9 @@ const updateMatch = async (req, res) => {
     if (!match) {
       throw new NotFoundError(`no match with id ${matchId}`);
     }
-    const firstTeamId = match.firstTeamId;
-    const secondTeamId = match.secondTeamId;
+
+    const firstTeamId = match.firstTeamId._id;
+    const secondTeamId = match.secondTeamId._id;
 
     if (req.body.result && req.body.status) {
       const { team1Score, team2Score } = req.body.result;

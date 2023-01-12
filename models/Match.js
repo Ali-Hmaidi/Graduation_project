@@ -2,14 +2,12 @@ const mongoose = require("mongoose");
 
 const MatchesSchema = new mongoose.Schema({
   firstTeamId: {
-    type: mongoose.Types.ObjectId,
-    ref: "Team",
+    type: {},
 
     required: true,
   },
   secondTeamId: {
-    type: mongoose.Types.ObjectId,
-    ref: "Team",
+    type: {},
 
     validate: [
       validateteams,
@@ -24,8 +22,7 @@ const MatchesSchema = new mongoose.Schema({
     default: "comingSoon",
   },
   playGround: {
-    type: mongoose.Types.ObjectId,
-    ref: "PlayGround",
+    type: {},
 
     required: true,
   },
