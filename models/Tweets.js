@@ -20,6 +20,7 @@ const TweetsSchema = new mongoose.Schema(
       trim: true,
       maxlength: [1000, "the tweet can not be more than 1000 characters"],
     },
+    thumbnail: String,
   },
   { timestamps: true }
 );

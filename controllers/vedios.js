@@ -3,9 +3,7 @@ const { BadRequestError, NotFoundError } = require("../errors");
 const path = require("path");
 const fs = require("fs");
 const formidable = require("formidable");
-const { getVideoDuration } = require("get-video-duration");
 const Match = require("../models/Match");
-const { request } = require("http");
 
 const getAllVedios = async (req, res) => {
   res.status(StatusCodes.OK).send("all vedios");
@@ -57,8 +55,9 @@ const uploadVideo = async (req, res) => {
   if (isAdmin) {
     const formData = new formidable.IncomingForm();
 
-    formData.maxFileSize = 1000 * 1024 * 1024;
+    console.log(formData.field);
 
+    formData.maxFileSize = 1000 * 1024 * 1024;
     formData.parse(req, function (error, fields, files) {
       title = fields.title;
       const oldPathViedo = files.video.filepath;
@@ -77,6 +76,7 @@ const uploadVideo = async (req, res) => {
         }
 
         res.status(StatusCodes.OK).json({ success: true, match });
+        return;
       });
     });
   } else {
