@@ -32,7 +32,7 @@ const getComments = async (req, res) => {
     .limit(Number(pageSize))
     .skip((Number(page) - 1) * Number(pageSize))
     .sort("createdAt");
-  res.status(StatusCodes.OK).json({ tweets: tweetComments });
+  res.status(StatusCodes.OK).json({ tweetComments });
 };
 
 const deleteComment = async (req, res) => {

@@ -6,7 +6,6 @@ require("express-async-errors");
 const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
-const formidableMiddleware = require("express-formidable");
 
 const express = require("express");
 const app = express();
@@ -39,7 +38,7 @@ app.use(
     max: 100, // linit each ip to 100 requistes per windowMs
   })
 );
-
+app.use(express.static("src"));
 app.use(express.json());
 //app.use(helmet());
 app.use(

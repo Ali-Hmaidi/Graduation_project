@@ -40,9 +40,6 @@ const getAllTweets = async (req, res) => {
 const CreateTweet = async (req, res) => {
   req.body.createdBy = req.user.userId;
 
-  req.body.thumbnail =
-    "../../../../BackEnd/src/tweetThumbnails/" + req.body.thumbnail;
-
   const tweet = await Tweet.create(req.body);
   res.status(StatusCodes.CREATED).json({ tweet });
 };

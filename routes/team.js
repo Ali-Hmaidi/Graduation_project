@@ -6,10 +6,10 @@ const multer = require("multer");
 const path = require("path");
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, path.resolve("/assets/images/teams"));
+    callback(null, path.resolve(`./src/teamsTumbnails`));
   },
   filename: (req, file, callback) => {
-    req.body.thumbnail = file.originalname;
+    req.body.thumbnail = Date.now() + path.extname(file.originalname);
     callback(null, req.body.thumbnail);
   },
 });
