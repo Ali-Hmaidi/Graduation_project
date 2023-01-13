@@ -93,6 +93,10 @@ const uploadPlayerThumbnail = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
     const playerId = req.params.id;
+
+    req.body.thumbnail =
+      "../../../../BackEnd/src/playerThumbnail/" + req.body.thumbnail;
+
     const player = await Player.findByIdAndUpdate({ _id: playerId }, req.body);
     res.status(StatusCodes.CREATED).json({ player });
   } else {
