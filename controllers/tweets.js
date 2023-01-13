@@ -28,11 +28,11 @@ const getAllTweets = async (req, res) => {
 
   const tweets = await result;
 
-  for (var i = 0; i < tweets.length; i++) {
-    const likes = await Likes.find({ tweetId: tweets[i]._id });
+  // for (var i = 0; i < tweets.length; i++) {
+  //   const likes = await Likes.find({ tweetId: tweets[i]._id });
 
-    tweets[i].likesCount = likes.length;
-  }
+  //   tweets[i].likesCount = likes.length;
+  // }
 
   res.status(StatusCodes.OK).json({ tweets });
 };
@@ -68,7 +68,7 @@ const deleteTweet = async (req, res) => {
   const isAdmin = req.user.admin;
   console.log(isAdmin);
   const id = await Tweet.findOne({ _id: tweetId });
-  if (String(id.createdBy) === String(userId) && !isAdmin) {
+  if (String(id.createdBy) !== String(userId) && !isAdmin) {
     throw new BadRequestError("a user can only delete tweets that he created");
   }
 
@@ -88,11 +88,12 @@ const updateTweet = async (req, res) => {
     body: { Description },
     params: { id: tweetId },
   } = req;
-  const isAdmin = req.user.admin;
 
+  const isAdmin = req.user.admin;
   const id = await Tweet.findOne({ _id: tweetId });
   const userId = req.user.userId;
-  if (id.createdBy != userId || isAdmin) {
+
+  if (String(id.createdBy) !== String(userId) && !isAdmin) {
     throw new BadRequestError("a user can only update tweets that he created");
   }
 

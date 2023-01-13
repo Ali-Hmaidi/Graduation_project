@@ -36,6 +36,13 @@ const likeTweet = async (req, res) => {
       req.body.userId = userId;
       req.body.tweetId = tweetId;
       const like = await Likes.create(req.body);
+
+      const likes = await Likes.find({ tweetId: tweetId });
+      const tweet = await Tweets.findByIdAndUpdate(
+        { _id: tweetId },
+        { likesCount: likes.length }
+      );
+
       res.status(StatusCodes.CREATED).json({ like });
     } else {
       throw new BadRequestError("already liked");
@@ -63,6 +70,12 @@ const unlikeTweet = async (req, res) => {
   if (!unlike) {
     throw new NotFoundError(`no tweet with id ${tweetId}`);
   }
+
+  const likes = await Likes.find({ tweetId: tweetId });
+  const tweet = await Tweets.findByIdAndUpdate(
+    { _id: tweetId },
+    { likesCount: likes.length }
+  );
 
   res.status(StatusCodes.OK).send();
 };

@@ -89,6 +89,17 @@ const updatePlayer = async (req, res) => {
   }
 };
 
+const uploadPlayerThumbnail = async (req, res) => {
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const playerId = req.params.id;
+    const player = await Player.findByIdAndUpdate({ _id: playerId }, req.body);
+    res.status(StatusCodes.CREATED).json({ player });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+
 module.exports = {
   getPlayers,
   getPlayer,
@@ -96,4 +107,5 @@ module.exports = {
   deletePlayer,
   RetrieveTeamPlayers,
   updatePlayer,
+  uploadPlayerThumbnail,
 };

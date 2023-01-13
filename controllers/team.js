@@ -121,10 +121,21 @@ const updateTeam = async (req, res) => {
   }
 };
 
+const uploadTeamThumbnail = async (req, res) => {
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const teamId = req.params.id;
+    const team = await Team.findByIdAndUpdate({ _id: teamId }, req.body);
+    res.status(StatusCodes.CREATED).json({ team });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
 module.exports = {
   getTeams,
   getTeam,
   CreateTeam,
   deleteTeam,
   updateTeam,
+  uploadTeamThumbnail,
 };

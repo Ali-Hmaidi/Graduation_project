@@ -43,7 +43,7 @@ const deleteComment = async (req, res) => {
   const isAdmin = req.user.admin;
   const id = await Comments.findOne({ _id: commentId });
   if (id) {
-    if (id.userId != userId || isAdmin) {
+    if (String(id.userId) !== String(userId) && !isAdmin) {
       throw new BadRequestError(
         "a user can only delete tweets that he created"
       );
