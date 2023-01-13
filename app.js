@@ -38,7 +38,7 @@ app.use(
     max: 100, // linit each ip to 100 requistes per windowMs
   })
 );
-app.use(express.static("src"));
+app.use("/api/v1/src", express.static("src"));
 app.use(express.json());
 //app.use(helmet());
 app.use(

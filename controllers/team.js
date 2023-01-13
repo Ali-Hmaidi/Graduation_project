@@ -126,7 +126,8 @@ const uploadTeamThumbnail = async (req, res) => {
   if (isAdmin) {
     const teamId = req.params.id;
 
-    req.body.thumbnail = "/teamsTumbnails/" + req.body.thumbnail;
+    req.body.thumbnail =
+      process.env.BASE_URL_BACK + "/src/teamsTumbnails/" + req.body.thumbnail;
     const team = await Team.findByIdAndUpdate({ _id: teamId }, req.body);
     res.status(StatusCodes.CREATED).json({ team });
   } else {
