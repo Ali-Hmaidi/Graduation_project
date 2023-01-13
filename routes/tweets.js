@@ -10,11 +10,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     req.body.Description = file.Description;
-    req.body.thumbnail =
-      path.resolve(`./src/teamsTumbnails`) +
-      "/" +
-      Date.now() +
-      path.extname(file.originalname);
+    req.body.thumbnail = Date.now() + path.extname(file.originalname);
     callback(null, req.body.thumbnail);
   },
 });

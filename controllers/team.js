@@ -125,6 +125,11 @@ const uploadTeamThumbnail = async (req, res) => {
   const isAdmin = req.user.admin;
   if (isAdmin) {
     const teamId = req.params.id;
+
+    console.log(req.body.thumbnail);
+    req.body.thumbnail =
+      "../../../../BackEnd/src/teamsTumbnails/" + req.body.thumbnail;
+
     const team = await Team.findByIdAndUpdate({ _id: teamId }, req.body);
     res.status(StatusCodes.CREATED).json({ team });
   } else {
