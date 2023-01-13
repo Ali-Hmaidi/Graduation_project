@@ -19,7 +19,11 @@ const storage = multer.diskStorage({
     callback(null, path.resolve(`./src/playerThumbnail`));
   },
   filename: (req, file, callback) => {
-    req.body.thumbnail = Date.now() + path.extname(file.originalname);
+    req.body.thumbnail =
+      path.resolve(`./src/teamsTumbnails`) +
+      "/" +
+      Date.now() +
+      path.extname(file.originalname);
     callback(null, req.body.thumbnail);
   },
 });
