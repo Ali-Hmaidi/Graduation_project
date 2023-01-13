@@ -6,12 +6,25 @@ const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 
 const getMatches = async (req, res) => {
-  const matches = await Match.find({});
+  const { status, sort } = req.query;
+  const queryObject = {};
 
-  //for refreshing the today matches you need to call this req.
-  //const today = new Date();
+  if (status) {
+    queryObject.status = status;
+  }
 
-  res.status(StatusCodes.OK).json({ matches });
+  let result = Match.find(queryObject);
+  // sort
+  if (sort) {
+    const sortList = sort.split(",").join(" ");
+    result = result.sort(sortList);
+  } else {
+    result = result.sort("createdAt");
+  }
+
+  const matches = await result;
+
+  res.status(StatusCodes.OK).json({ matchesCount: matches.length, matches });
 };
 
 const getBigMatches = async (req, res) => {

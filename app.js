@@ -26,6 +26,7 @@ const likesRouter = require("./routes/likes");
 const commentsRouter = require("./routes/comments");
 const ordersRouter = require("./routes/orders");
 const vediosRouter = require("./routes/vedios");
+const predictionsRouter = require("./routes/predictions");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -65,6 +66,7 @@ app.use("/api/v1/likes", likesRouter);
 app.use("/api/v1/tweets", tweetsRouter);
 app.use("/api/v1/orders", authenticateUser, ordersRouter);
 app.use("/api/v1/vedios", vediosRouter);
+app.use("/api/v1/predictions", predictionsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
