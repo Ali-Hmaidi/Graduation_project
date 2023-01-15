@@ -4,6 +4,8 @@ const PlayGround = require("../models/PlayGround");
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
+const { date } = require("joi");
+const { findByIdAndUpdate } = require("../models/Team");
 
 const getMatches = async (req, res) => {
   const { status, sort } = req.query;
@@ -23,6 +25,20 @@ const getMatches = async (req, res) => {
   }
 
   const matches = await result;
+
+  for (let i = 0; i < matches.length; i++) {
+    if (
+      matches[i].status == "comingSoon" &&
+      matches[i].matchDate < Date.now()
+    ) {
+      const updatedMatch = await Match.findByIdAndUpdate(
+        { _id: matches[i]._id },
+        { status: "endded" }
+      );
+
+      matches[i].status = "endded";
+    }
+  }
 
   res.status(StatusCodes.OK).json({ matchesCount: matches.length, matches });
 };
