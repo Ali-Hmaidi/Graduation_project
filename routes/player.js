@@ -2,16 +2,6 @@ const express = require("express");
 const router = express.Router();
 const authenticateUser = require("../middleware/authentication");
 
-const {
-  getPlayers,
-  getPlayer,
-  CreatePlayer,
-  deletePlayer,
-  RetrieveTeamPlayers,
-  updatePlayer,
-  uploadPlayerThumbnail,
-} = require("../controllers/player");
-
 const multer = require("multer");
 const path = require("path");
 const storage = multer.diskStorage({
@@ -24,6 +14,16 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+
+const {
+  getPlayers,
+  getPlayer,
+  CreatePlayer,
+  deletePlayer,
+  RetrieveTeamPlayers,
+  updatePlayer,
+  uploadPlayerThumbnail,
+} = require("../controllers/player");
 
 router.get("/", getPlayers).post("/", authenticateUser, CreatePlayer);
 router

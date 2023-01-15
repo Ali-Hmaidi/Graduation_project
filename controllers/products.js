@@ -172,7 +172,7 @@ const deleteReview = async (req, res) => {
   const isAdmin = req.user.admin;
 
   const id = await Review.findOne({ _id: reviewId });
-  if (id.userId != userId || !isAdmin) {
+  if (String(id.userId) !== String(userId) && !isAdmin) {
     throw new BadRequestError("a user can only delete reviews that he created");
   }
 
