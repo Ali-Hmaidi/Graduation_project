@@ -52,50 +52,95 @@ getWinnerOfTwo = async (req, res) => {
   const team2Matches = [];
 
   for (let i = 0; i < matches.length; i++) {
-    if (String(matches[i].firstTeamId._id) === String(team1Id)) {
+    if (
+      String(matches[i].firstTeamId._id) === String(team1Id) ||
+      String(matches[i].secondTeamId._id) === String(team1Id)
+    ) {
       team1Matches.push(matches[i]);
     }
-    if (String(matches[i].secondTeamId._id) === String(team2Id)) {
+    if (
+      String(matches[i].firstTeamId._id) === String(team2Id) ||
+      String(matches[i].secondTeamId._id) === String(team2Id)
+    ) {
       team2Matches.push(matches[i]);
     }
   }
 
   const trainingData = [];
   for (let i = 0; i < team1Matches.length; i++) {
-    const team1Score = team1Matches[i].result.team1Score;
-    const team2Score = team1Matches[i].result.team2Score;
-    trainingData.push({
-      input: {
-        team1: 1,
-        team2: 0,
-      },
-      // if 1 => team 1 is winner , if 0 team2 is winner , if 3 tie
-      output: {
-        winner: team1Score > team2Score ? 1 : team1Score > team2Score ? 0 : 0.5,
-      },
-    });
+    if (String(team1Matches[i].firstTeamId._id) === String(team1Id)) {
+      const team1Score = team1Matches[i].result.team1Score;
+      const team2Score = team1Matches[i].result.team2Score;
+      trainingData.push({
+        input: {
+          team1: 1,
+          team2: 0,
+        },
+        // if 1 => team 1 is winner , if 0 team2 is winner , if 3 tie
+        output: {
+          winner:
+            team1Score > team2Score ? 1 : team1Score < team2Score ? 0 : 0.5,
+        },
+      });
+    } else {
+      const team1Score = team1Matches[i].result.team2Score;
+      const team2Score = team1Matches[i].result.team1Score;
+      trainingData.push({
+        input: {
+          team1: 1,
+          team2: 0,
+        },
+        // if 1 => team 1 is winner , if 0 team2 is winner , if 3 tie
+        output: {
+          winner:
+            team1Score > team2Score ? 1 : team1Score < team2Score ? 0 : 0.5,
+        },
+      });
+    }
   }
   for (let i = 0; i < team2Matches.length; i++) {
-    const team1Score = team2Matches[i].result.team1Score;
-    const team2Score = team2Matches[i].result.team2Score;
-    trainingData.push({
-      input: {
-        team1: 1,
-        team2: 0,
-      },
-      // if 1 => team 1 is winner , if 0 team2 is winner , if 3 tie
-      output: {
-        winner: team1Score > team2Score ? 1 : team1Score > team2Score ? 0 : 0.5,
-      },
-    });
+    if (String(team2Matches[i].firstTeamId._id) === String(team2Id)) {
+      const team1Score = team2Matches[i].result.team1Score;
+      const team2Score = team2Matches[i].result.team2Score;
+      trainingData.push({
+        input: {
+          team1: 0,
+          team2: 1,
+        },
+        // if 1 => team 1 is winner , if 0 team2 is winner , if 3 tie
+        output: {
+          winner:
+            team1Score > team2Score ? 0 : team1Score < team2Score ? 1 : 0.5,
+        },
+      });
+    } else {
+      const team1Score = team2Matches[i].result.team2Score;
+      const team2Score = team2Matches[i].result.team1Score;
+      trainingData.push({
+        input: {
+          team1: 0,
+          team2: 1,
+        },
+        // if 1 => team 1 is winner , if 0 team2 is winner , if 3 tie
+        output: {
+          winner:
+            team1Score > team2Score ? 0 : team1Score < team2Score ? 1 : 0.5,
+        },
+      });
+    }
   }
 
   console.log(trainingData);
 
   const stats = net.train(trainingData);
-  const result = net.run({ team1: 1, team2: 0 });
+  const result1 = net.run({ team1: 1, team2: 0 });
+  const result2 = net.run({ team1: 0, team2: 1 });
 
-  res.status(StatusCodes.OK).json({ stats: stats, result: result });
+  res.status(StatusCodes.OK).json({
+    stats: stats,
+    team1: { result: result1 },
+    team2: { result: result2 },
+  });
 };
 
 module.exports = {
