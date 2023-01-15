@@ -139,7 +139,7 @@ getWinnerOfTwo = async (req, res) => {
   res.status(StatusCodes.OK).json({
     stats: stats,
     team1: { result: result1 },
-    team2: { result: result2 },
+    team2: { result: 1 - result2.winner },
   });
 };
 
