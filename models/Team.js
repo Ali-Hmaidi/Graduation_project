@@ -15,6 +15,19 @@ const TeamsSchema = new mongoose.Schema({
   },
   description: String,
 
+  faceBookLink: {
+    type: String,
+    default: "",
+  },
+  instegramLink: {
+    type: String,
+    default: "",
+  },
+  youtubeLink: {
+    type: String,
+    default: "",
+  },
+
   wins: { type: Number, default: 0 },
 
   losses: { type: Number, default: 0 },

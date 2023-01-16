@@ -195,6 +195,24 @@ const GetReviewsForProduct = async (req, res) => {
   res.status(StatusCodes.OK).json({ reviews });
 };
 
+const uploadProductImage = async (req, res) => {
+  const isAdmin = req.user.admin;
+  if (isAdmin) {
+    const productId = req.params.id;
+
+    req.body.thumbnail =
+      process.env.BASE_URL_BACK + "/src/productImages/" + req.body.thumbnail;
+
+    const product = await Product.findByIdAndUpdate(
+      { _id: productId },
+      req.body
+    );
+    res.status(StatusCodes.CREATED).json({ product });
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json({ success: false });
+  }
+};
+
 module.exports = {
   getAllProductsStatic,
   getAllProducts,
@@ -205,4 +223,5 @@ module.exports = {
   addReview,
   deleteReview,
   GetReviewsForProduct,
+  uploadProductImage,
 };

@@ -2,6 +2,19 @@ const express = require("express");
 const router = express.Router();
 const authenticateUser = require("../middleware/authentication");
 
+const multer = require("multer");
+const path = require("path");
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, path.resolve(`./src/productImages`));
+  },
+  filename: (req, file, callback) => {
+    req.body.thumbnail = Date.now() + path.extname(file.originalname);
+    callback(null, req.body.thumbnail);
+  },
+});
+const upload = multer({ storage: storage });
+
 const {
   getAllProductsStatic,
   getAllProducts,
@@ -12,6 +25,7 @@ const {
   addReview,
   deleteReview,
   GetReviewsForProduct,
+  uploadProductImage,
 } = require("../controllers/products");
 
 router.route("/").get(getAllProducts).post(authenticateUser, CreateProduct);
@@ -27,5 +41,12 @@ router
   .delete(authenticateUser, deleteProduct)
   .patch(authenticateUser, updateProduct)
   .get(getProduct);
+
+router.post(
+  "/upload/:id",
+  authenticateUser,
+  upload.single("image"),
+  uploadProductImage
+);
 
 module.exports = router;
