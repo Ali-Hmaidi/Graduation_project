@@ -19,19 +19,24 @@ const StratNotification = async (req, res) => {
     throw new BadRequestError("a user can only start notification for himself");
   }
 
-  var yesterday = new Date(match.matchDate);
-  yesterday.setDate(match.matchDate.getDate() - 1);
+  let calculatedDate = new Date(match.matchDate);
+  calculatedDate.setDate(calculatedDate.getDate() - 1);
+  calculatedDate = calculatedDate.toISOString();
+  const reminderDate = new Date(calculatedDate);
 
-  const timeElapsed = Date.now() + 10000;
-  const today = new Date(timeElapsed);
+  // var yesterday = new Date(match.matchDate);
+  // yesterday.setDate(match.matchDate.getDate() - 1);
 
-  //   console.log(today);
-  //   console.log(yesterday);
+  // const timeElapsed = Date.now() + 10000;
+  // const today = new Date(timeElapsed);
+
+  // console.log(today);
+  // console.log(yesterday);
   const unique_name = Date.now().toString();
 
   Notification = schedule.scheduleJob(
     unique_name,
-    yesterday,
+    reminderDate,
     async function () {
       const text = `Hey there,\nThere is going to be a scheduled match tomorrow on PS-Sport at ${match.matchDate.getHours()} Oclock\nMake sure not to miss it.\nPS-Sport,\nAdmin. `;
 
