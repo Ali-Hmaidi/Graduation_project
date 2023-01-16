@@ -10,6 +10,11 @@ const EamilsSchema = new mongoose.Schema(
       required: [true, "MUST PROVIDE user"],
     },
     creatorName: String,
+    subject: {
+      type: String,
+      required: true,
+      default: "Email from a user",
+    },
     Description: {
       type: String,
       required: [true, "MUST PROVIDE tweet body"],
