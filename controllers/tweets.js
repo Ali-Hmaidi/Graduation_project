@@ -72,7 +72,7 @@ const deleteTweet = async (req, res) => {
   console.log(isAdmin);
   const id = await Tweet.findOne({ _id: tweetId });
   if (String(id.createdBy) !== String(userId) && !isAdmin) {
-    throw new BadRequestError("a user can only delete tweets that he created");
+    throw new BadRequestError("a user can only delete posts that he created");
   }
 
   const tweet = await Tweet.findByIdAndRemove({
