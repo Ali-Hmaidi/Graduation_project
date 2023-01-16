@@ -27,19 +27,32 @@ const StratNotification = async (req, res) => {
 
   //   console.log(today);
   //   console.log(yesterday);
+  const unique_name = Date.now().toString();
 
-  Notification = schedule.scheduleJob(yesterday, async function () {
-    const text = `Hey there,\nThere is going to be a scheduled match tomorrow on PS-Sport at ${match.matchDate.getHours()} Oclock\nMake sure not to miss it.\nPS-Sport,\nAdmin. `;
+  Notification = schedule.scheduleJob(
+    unique_name,
+    yesterday,
+    async function () {
+      const text = `Hey there,\nThere is going to be a scheduled match tomorrow on PS-Sport at ${match.matchDate.getHours()} Oclock\nMake sure not to miss it.\nPS-Sport,\nAdmin. `;
 
-    await sendEmail(user.email, "Notification Email", text);
-  });
+      await sendEmail(user.email, "Notification Email", text);
+    }
+  );
 
-  res.status(StatusCodes.OK).json({ success: true });
+  res.status(StatusCodes.OK).json({ success: true, scheduleName: unique_name });
 };
 
 const EndNotification = async (req, res) => {
-  Notification.cancel();
+  const unique_name = req.params.scheduleName;
+  const EndNotification = schedule.scheduledJobs[unique_name];
 
+  if (!EndNotification) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ success: false, msg: "the notification is off" });
+  } else {
+  }
+  EndNotification.cancel();
   res.status(StatusCodes.OK).json({ success: true });
 };
 

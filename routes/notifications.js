@@ -7,6 +7,6 @@ const {
 } = require("../controllers/notifications");
 
 router.get("/start/:userId/:matchId", StratNotification);
-router.get("/end/:userId/:matchId", EndNotification);
+router.get("/end/:scheduleName", EndNotification);
 
 module.exports = router;
