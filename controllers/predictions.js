@@ -136,10 +136,16 @@ getWinnerOfTwo = async (req, res) => {
   const result1 = net.run({ team1: 1, team2: 0 });
   const result2 = net.run({ team1: 0, team2: 1 });
 
+  var flagOfWinner = true;
+
+  if (result1.winner < result2.winner) {
+    flagOfWinner = false;
+  }
+
   res.status(StatusCodes.OK).json({
     stats: stats,
-    team1: { result: result1.winner },
-    team2: { result: 1 - result2.winner },
+    team1: { result: result1.winner, win: flagOfWinner },
+    team2: { result: 1 - result2.winner, win: !flagOfWinner },
   });
 };
 
