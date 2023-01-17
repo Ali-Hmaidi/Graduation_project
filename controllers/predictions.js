@@ -138,7 +138,7 @@ getWinnerOfTwo = async (req, res) => {
 
   var flagOfWinner = true;
 
-  if (result1.winner < result2.winner) {
+  if (result1.winner < 1 - result2.winner) {
     flagOfWinner = false;
   }
 
