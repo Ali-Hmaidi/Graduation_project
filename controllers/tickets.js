@@ -101,7 +101,19 @@ const confirmTicket = async (req, res) => {
   const userId = req.params.userId;
   const matchId = req.params.matchId;
 
-  res.status(StatusCodes.OK).json({ success: true });
+  const ticket = Ticket.find({ userId: userId });
+  const match = Match.findById({ _id: matchId });
+
+  if (match.status == "endded") {
+    throw new NotFoundError("this ticket is invalid , the match ended");
+  }
+  if (!ticket) {
+    throw new NotFoundError("this ticket is invalid");
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .json({ success: true, personalIdNumber: ticket.personalIdNumber });
 };
 
 module.exports = {
