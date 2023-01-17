@@ -29,6 +29,7 @@ const vediosRouter = require("./routes/vedios");
 const predictionsRouter = require("./routes/predictions");
 const notificationsRouter = require("./routes/notifications");
 const emailsRouter = require("./routes/emails");
+const ticketsRouter = require("./routes/tickets");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -71,6 +72,7 @@ app.use("/api/v1/vedios", vediosRouter);
 app.use("/api/v1/predictions", predictionsRouter);
 app.use("/api/v1/notifications", authenticateUser, notificationsRouter);
 app.use("/api/v1/emails", authenticateUser, emailsRouter);
+app.use("/api/v1/tickets", authenticateUser, ticketsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

@@ -5,7 +5,7 @@ const { BadRequestError, NotFoundError } = require("../errors");
 
 const getPlayers = async (req, res) => {
   const players = await Player.find({});
-  res.status(StatusCodes.OK).json({ players });
+  res.status(StatusCodes.OK).json({ playersCount: players.length, players });
 };
 
 const CreatePlayer = async (req, res) => {
@@ -59,16 +59,12 @@ const RetrieveTeamPlayers = async (req, res) => {
 
 const updatePlayer = async (req, res) => {
   const {
-    body: { name, teamId, thumbnail },
     params: { id: playerId },
   } = req;
 
   const isAdmin = req.user.admin;
 
   if (isAdmin) {
-    if (!name || !teamId || !thumbnail) {
-      throw new BadRequestError("fields cant be empty");
-    }
     const player = await Player.findByIdAndUpdate({ _id: playerId }, req.body, {
       new: true,
       runValidators: true,
@@ -79,10 +75,7 @@ const updatePlayer = async (req, res) => {
     }
 
     res.status(StatusCodes.OK).json({
-      _id: player._id,
-      name: player.name,
-      teamId: player.teamId,
-      thumbnail: player.thumbnail,
+      player,
     });
   } else {
     res.status(StatusCodes.UNAUTHORIZED).json({ success: false });

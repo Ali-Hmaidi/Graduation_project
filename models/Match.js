@@ -47,6 +47,11 @@ const MatchesSchema = new mongoose.Schema({
     type: String,
     default: "match1.mp4",
   },
+  ticketPrice: {
+    type: Number,
+    required: true,
+    default: 10,
+  },
 });
 
 function validateteams(team) {
