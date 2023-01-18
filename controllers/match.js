@@ -132,14 +132,17 @@ const updateMatch = async (req, res) => {
     const firstTeamIdobj = await Team.findById({
       _id: matchobj.firstTeamId._id,
     });
+
     const secondTeamIdobj = await Team.findById({
       _id: matchobj.secondTeamId._id,
     });
+
     const playGround = await PlayGround.findById({
       _id: matchobj.playGround._id,
     });
+
     const updatedMatch = await Match.findByIdAndUpdate(
-      { _id: matchobj._id },
+      { _id: matchId },
       {
         firstTeamId: firstTeamIdobj,
         secondTeamId: secondTeamIdobj,
@@ -160,7 +163,6 @@ const updateMatch = async (req, res) => {
     const secondTeamId = match.secondTeamId._id;
 
     const { team1Score, team2Score } = match.result;
-    console.log(team1Score, team2Score);
 
     if (match.status === "endded") {
       if (team1Score > team2Score) {
