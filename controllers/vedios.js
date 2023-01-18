@@ -55,8 +55,6 @@ const uploadVideo = async (req, res) => {
   if (isAdmin) {
     const formData = new formidable.IncomingForm();
 
-    console.log(formData.field);
-
     formData.maxFileSize = 1000 * 1024 * 1024;
     formData.parse(req, function (error, fields, files) {
       title = fields.title;
@@ -65,6 +63,7 @@ const uploadVideo = async (req, res) => {
         `./src/vedios/${files.video.originalFilename}`
       );
       var vidname = files.video.originalFilename;
+      console.log(vidname);
 
       fs.rename(oldPathViedo, newPath, async function (error) {
         const match = await Match.findByIdAndUpdate(
