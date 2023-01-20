@@ -120,7 +120,7 @@ const deleteMatch = async (req, res) => {
 
 const updateMatch = async (req, res) => {
   const {
-    body: { status },
+    body: { status, result },
     params: { id: matchId },
   } = req;
 
@@ -162,63 +162,65 @@ const updateMatch = async (req, res) => {
     const firstTeamId = match.firstTeamId._id;
     const secondTeamId = match.secondTeamId._id;
 
-    const { team1Score, team2Score } = match.result;
+    if (result) {
+      const { team1Score, team2Score } = result;
 
-    if (match.status === "endded") {
-      if (team1Score > team2Score) {
-        const team1 = await Team.findOne({ _id: firstTeamId });
+      if (match.status === "endded") {
+        if (team1Score > team2Score) {
+          const team1 = await Team.findOne({ _id: firstTeamId });
 
-        await Team.findByIdAndUpdate(
-          { _id: firstTeamId },
-          {
-            wins: ++team1.wins,
-            matchesPlayed: ++team1.matchesPlayed,
-            points: team1.points + 2,
-            GF: team1.GF + team1Score,
-            GA: team1.GA + team2Score,
-            GD: team1.GD + (team1Score - team2Score),
-          }
-        );
+          await Team.findByIdAndUpdate(
+            { _id: firstTeamId },
+            {
+              wins: ++team1.wins,
+              matchesPlayed: ++team1.matchesPlayed,
+              points: team1.points + 2,
+              GF: team1.GF + team1Score,
+              GA: team1.GA + team2Score,
+              GD: team1.GD + (team1Score - team2Score),
+            }
+          );
 
-        const team2 = await Team.findOne({ _id: secondTeamId });
-        await Team.findByIdAndUpdate(
-          { _id: secondTeamId },
-          {
-            losses: ++team2.losses,
-            matchesPlayed: ++team2.matchesPlayed,
-            points: team2.points + 1,
-            GF: team2.GF + team2Score,
-            GA: team2.GA + team1Score,
-            GD: team2.GD + (team2Score - team1Score),
-          }
-        );
-      } else if (team1Score < team2Score) {
-        const team2 = await Team.findOne({ _id: secondTeamId });
+          const team2 = await Team.findOne({ _id: secondTeamId });
+          await Team.findByIdAndUpdate(
+            { _id: secondTeamId },
+            {
+              losses: ++team2.losses,
+              matchesPlayed: ++team2.matchesPlayed,
+              points: team2.points + 1,
+              GF: team2.GF + team2Score,
+              GA: team2.GA + team1Score,
+              GD: team2.GD + (team2Score - team1Score),
+            }
+          );
+        } else if (team1Score < team2Score) {
+          const team2 = await Team.findOne({ _id: secondTeamId });
 
-        await Team.findByIdAndUpdate(
-          { _id: secondTeamId },
-          {
-            wins: ++team2.wins,
-            matchesPlayed: ++team2.matchesPlayed,
-            points: team2.points + 2,
-            GF: team2.GF + team2Score,
-            GA: team2.GA + team1Score,
-            GD: team2.GD + (team2Score - team1Score),
-          }
-        );
+          await Team.findByIdAndUpdate(
+            { _id: secondTeamId },
+            {
+              wins: ++team2.wins,
+              matchesPlayed: ++team2.matchesPlayed,
+              points: team2.points + 2,
+              GF: team2.GF + team2Score,
+              GA: team2.GA + team1Score,
+              GD: team2.GD + (team2Score - team1Score),
+            }
+          );
 
-        const team1 = await Team.findOne({ _id: firstTeamId });
-        await Team.findByIdAndUpdate(
-          { _id: firstTeamId },
-          {
-            losses: ++team1.losses,
-            matchesPlayed: ++team1.matchesPlayed,
-            points: team1.points + 1,
-            GF: team1.GF + team1Score,
-            GA: team1.GA + team2Score,
-            GD: team1.GD + (team1Score - team2Score),
-          }
-        );
+          const team1 = await Team.findOne({ _id: firstTeamId });
+          await Team.findByIdAndUpdate(
+            { _id: firstTeamId },
+            {
+              losses: ++team1.losses,
+              matchesPlayed: ++team1.matchesPlayed,
+              points: team1.points + 1,
+              GF: team1.GF + team1Score,
+              GA: team1.GA + team2Score,
+              GD: team1.GD + (team1Score - team2Score),
+            }
+          );
+        }
       }
     }
 
