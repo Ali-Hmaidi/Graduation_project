@@ -12,15 +12,12 @@ const { required } = require("joi");
 var Notification;
 
 const StratNotification = async (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.user.userId;
   const matchId = req.params.matchId;
 
   const match = await Match.findOne({ _id: matchId });
   const user = await User.findById({ _id: userId });
 
-  if (String(req.user.userId) !== String(userId)) {
-    throw new BadRequestError("a user can only start notification for himself");
-  }
   const notification = await Notifications.create({
     userId: userId,
     matchId: matchId,
