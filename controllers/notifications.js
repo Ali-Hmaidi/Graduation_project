@@ -18,11 +18,6 @@ const StratNotification = async (req, res) => {
   const match = await Match.findOne({ _id: matchId });
   const user = await User.findById({ _id: userId });
 
-  const notification = await Notifications.create({
-    userId: userId,
-    matchId: matchId,
-  });
-
   let calculatedDate = new Date(match.matchDate);
   calculatedDate.setDate(calculatedDate.getDate() - 1);
   calculatedDate = calculatedDate.toISOString();
@@ -48,9 +43,15 @@ const StratNotification = async (req, res) => {
     }
   );
 
+  const notifications = await Notifications.create({
+    userId: userId,
+    matchId: matchId,
+    scheduleName: unique_name,
+  });
+
   res
     .status(StatusCodes.OK)
-    .json({ success: true, scheduleName: unique_name, notification });
+    .json({ success: true, scheduleName: unique_name, notifications });
 };
 
 const EndNotification = async (req, res) => {

@@ -15,6 +15,7 @@ const NotificationsSchema = new mongoose.Schema(
       ref: "Match",
       required: [true, "MUST PROVIDE matchId"],
     },
+    scheduleName: String,
   },
   { timestamps: true }
 );
