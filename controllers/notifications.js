@@ -1,10 +1,13 @@
 const Match = require("../models/Match");
 const User = require("../models/User");
+const Notifications = require("../models/Notification");
+
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError, BadRequestError } = require("../errors");
 
 const sendEmail = require("../middleware/sendEmail");
 const schedule = require("node-schedule");
+const { required } = require("joi");
 
 var Notification;
 
@@ -18,6 +21,10 @@ const StratNotification = async (req, res) => {
   if (String(req.user.userId) !== String(userId)) {
     throw new BadRequestError("a user can only start notification for himself");
   }
+  const notification = await Notifications.create({
+    userId: userId,
+    matchId: matchId,
+  });
 
   let calculatedDate = new Date(match.matchDate);
   calculatedDate.setDate(calculatedDate.getDate() - 1);
@@ -44,11 +51,14 @@ const StratNotification = async (req, res) => {
     }
   );
 
-  res.status(StatusCodes.OK).json({ success: true, scheduleName: unique_name });
+  res
+    .status(StatusCodes.OK)
+    .json({ success: true, scheduleName: unique_name, notification });
 };
 
 const EndNotification = async (req, res) => {
   const unique_name = req.params.scheduleName;
+  const notify = req.params.notificationId;
   const EndNotification = schedule.scheduledJobs[unique_name];
 
   if (!EndNotification) {
@@ -58,6 +68,7 @@ const EndNotification = async (req, res) => {
   } else {
   }
   EndNotification.cancel();
+  await Notifications.findOneAndRemove({ _id: notify });
   res.status(StatusCodes.OK).json({ success: true });
 };
 

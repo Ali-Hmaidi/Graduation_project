@@ -137,16 +137,11 @@ const updateMatch = async (req, res) => {
       _id: matchobj.secondTeamId._id,
     });
 
-    const playGround = await PlayGround.findById({
-      _id: matchobj.playGround._id,
-    });
-
     const updatedMatch = await Match.findByIdAndUpdate(
       { _id: matchId },
       {
         firstTeamId: firstTeamIdobj,
         secondTeamId: secondTeamIdobj,
-        playGround: playGround,
       }
     );
 
