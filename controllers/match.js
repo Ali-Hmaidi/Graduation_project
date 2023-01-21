@@ -175,9 +175,9 @@ const updateMatch = async (req, res) => {
               wins: ++team1.wins,
               matchesPlayed: ++team1.matchesPlayed,
               points: team1.points + 2,
-              GF: team1.GF + team1Score,
-              GA: team1.GA + team2Score,
-              GD: team1.GD + (team1Score - team2Score),
+              GF: Number(team1.GF) + Number(team1Score),
+              GA: Number(team1.GA) + Number(team2Score),
+              GD: Number(team1.GD) + (team1Score - team2Score),
             }
           );
 
@@ -188,9 +188,9 @@ const updateMatch = async (req, res) => {
               losses: ++team2.losses,
               matchesPlayed: ++team2.matchesPlayed,
               points: team2.points + 1,
-              GF: team2.GF + team2Score,
-              GA: team2.GA + team1Score,
-              GD: team2.GD + (team2Score - team1Score),
+              GF: Number(team2.GF) + Number(team2Score),
+              GA: Number(team2.GA) + Number(team1Score),
+              GD: Number(team2.GD) + (team2Score - team1Score),
             }
           );
         } else if (team1Score < team2Score) {
@@ -202,9 +202,9 @@ const updateMatch = async (req, res) => {
               wins: ++team2.wins,
               matchesPlayed: ++team2.matchesPlayed,
               points: team2.points + 2,
-              GF: team2.GF + team2Score,
-              GA: team2.GA + team1Score,
-              GD: team2.GD + (team2Score - team1Score),
+              GF: Number(team2.GF) + Number(team2Score),
+              GA: Number(team2.GA) + Number(team1Score),
+              GD: Number(team2.GD) + (team2Score - team1Score),
             }
           );
 
@@ -215,9 +215,9 @@ const updateMatch = async (req, res) => {
               losses: ++team1.losses,
               matchesPlayed: ++team1.matchesPlayed,
               points: team1.points + 1,
-              GF: team1.GF + team1Score,
-              GA: team1.GA + team2Score,
-              GD: team1.GD + (team1Score - team2Score),
+              GF: Number(team1.GF) + Number(team1Score),
+              GA: Number(team1.GA) + Number(team2Score),
+              GD: Number(team1.GD) + (team1Score - team2Score),
             }
           );
         }
