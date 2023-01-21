@@ -69,7 +69,15 @@ const EndNotification = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true });
 };
 
+const RetrieveSpecificUserNotifications = async (req, res) => {
+  const userId = req.user.userId;
+
+  const notifications = await Notifications.find({ userId: userId });
+  res.status(StatusCodes.OK).json({ notifications });
+};
+
 module.exports = {
   StratNotification,
   EndNotification,
+  RetrieveSpecificUserNotifications,
 };
