@@ -166,7 +166,7 @@ const updateMatch = async (req, res) => {
       const { team1Score, team2Score } = result;
 
       if (match.status === "endded") {
-        if (team1Score > team2Score) {
+        if (Number(team1Score) > Number(team2Score)) {
           const team1 = await Team.findOne({ _id: firstTeamId });
 
           await Team.findByIdAndUpdate(
@@ -193,7 +193,7 @@ const updateMatch = async (req, res) => {
               GD: Number(team2.GD) + (team2Score - team1Score),
             }
           );
-        } else if (team1Score < team2Score) {
+        } else if (Number(team1Score) < Number(team2Score)) {
           const team2 = await Team.findOne({ _id: secondTeamId });
 
           await Team.findByIdAndUpdate(
